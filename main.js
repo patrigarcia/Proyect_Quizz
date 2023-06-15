@@ -10,8 +10,11 @@ const questionContainerElement = document.getElementById("question-container");
 const questionElement = document.getElementById("question");
 const answerButtonsElement = document.getElementById("answer-buttons");
 
+//------------------------------------- Variables globales ------------------------------//
 let currentQuestionIndex;
+let questions = [];
 
+//------------------------------------- Funciones de ocultar ------------------------------//
 function hideViews() {
     homeDiv.classList.add("hide");
     contactDiv.classList.add("hide");
@@ -33,8 +36,7 @@ function goContact() {
     contactDiv.classList.remove("hide");
 }
 
-
-let questions = [];
+//-------------------------------------Traer datos de la API ------------------------------//
 
 axios
     .get("https://opentdb.com/api.php?amount=10&category=22&difficulty=medium&type=multiple")
@@ -49,6 +51,9 @@ axios
         }));
 
         console.log(dataQuizz);
+
+        //------------------------------------- Acá Inicia el juego ------------------------------//
+        startGame(dataQuizz);
     })
     .catch((err) => {
         console.error("Error", err);
@@ -83,26 +88,34 @@ function selectAnswer() {
 
 function showQuestion(question) {
     questionElement.innerText = question.question;
-    question.answers.forEach((answer) => {
+
+    // Acá combino las correctas e incorrectas en un solo array
+    const answers = [...question.incorrect_answers, question.correct_answer];
+
+    shuffledAnswers.forEach((answer) => {
         const button = document.createElement("button");
-        button.innerText = answer.text;
-        if (answer.correct) {
+        button.innerText = answer;
+        if (answer === question.correct_answer) {
             button.dataset.correct = true;
         }
         button.addEventListener("click", selectAnswer);
         answerButtonsElement.appendChild(button);
     });
 }
+
 function setNextQuestion() {
     resetState();
     showQuestion(questions[currentQuestionIndex]);
 }
-function startGame() {
+
+function startGame(dataQuizz) {
     startButton.classList.add("hide");
     currentQuestionIndex = 0;
     questionContainerElement.classList.remove("hide");
+    questions = dataQuizz; // Reemplaza las preguntas con las que me traje de la API
     setNextQuestion();
 }
+
 startButton.addEventListener("click", startGame);
 nextButton.addEventListener("click", () => {
     currentQuestionIndex++;
