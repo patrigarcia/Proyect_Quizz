@@ -33,32 +33,26 @@ function goContact() {
     contactDiv.classList.remove("hide");
 }
 
-const questions = [
-    {
-        question: "What is 2 + 2?",
-        answers: [
-            { text: "4", correct: true },
-            { text: "22", correct: false },
-        ],
-    },
-    {
-        question: "Is web development fun?",
-        answers: [
-            { text: "Kinda", correct: false },
-            { text: "YES!!!", correct: true },
-            { text: "Um no", correct: false },
-            { text: "IDK", correct: false },
-        ],
-    },
-    {
-        question: "What is 4 * 2?",
-        answers: [
-            { text: "6", correct: false },
-            { text: "8", correct: true },
-            { text: "Yes", correct: false },
-        ],
-    },
-];
+
+let questions = [];
+
+axios
+    .get("https://opentdb.com/api.php?amount=10&category=22&difficulty=medium&type=multiple")
+    .then((res) => {
+        questions = res.data.results;
+        console.log("Las preguntas son:", questions);
+
+        const dataQuizz = questions.map((question) => ({
+            question: question.question,
+            correct_answer: question.correct_answer,
+            incorrect_answers: question.incorrect_answers,
+        }));
+
+        console.log(dataQuizz);
+    })
+    .catch((err) => {
+        console.error("Error", err);
+    });
 
 function resetState() {
     nextButton.classList.add("hide");
