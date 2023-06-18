@@ -37,7 +37,7 @@ function goContact() {
 }
 
 function shuffle(array) {
-    return array;
+    return array.sort(() => Math.random() - 0.5);
 }
 
 function getQuestions() {
@@ -69,29 +69,32 @@ function resetState() {
     }
 }
 
-function setStatusClass(element) {
-    if (element.dataset.correct) {
-        element.classList.add("correct");
-    } else {
-        element.classList.add("wrong");
-    }
-}
-
-function selectAnswer() {
+function setStatusClass() {
     Array.from(answerButtonsElement.children).forEach((button) => {
-        setStatusClass(button);
-        if (button.dataset.correct === "true") {
-            score++; // Incrementar el contador de respuestas correctas
+        if (button.dataset.correct) {
+            button.classList.add("correct");
+        } else {
+            button.classList.add("wrong");
         }
     });
-    if (questions.length > currentQuestionIndex + 1) {
+}
+
+function selectAnswer(evt) {
+    console.log(this);
+    console.log(evt);
+
+    if (this.dataset.correct === "true") {
+        score++;
+    }
+
+    if (quizz.length > currentQuestionIndex + 1) {
         nextButton.classList.remove("hide");
     } else {
         startButton.innerText = "Restart";
         startButton.classList.remove("hide");
-        // Mostrar el mensaje con el resultado al final del juego
         showResultMessage();
     }
+    setStatusClass();
 }
 
 function showQuestion(currentQuestion) {
@@ -117,13 +120,13 @@ function startGame() {
     startButton.classList.add("hide");
     nextButton.classList.add("hide");
     questionContainerElement.classList.remove("hide");
-    quizz.forEach((question) => setNextQuestion(question));
+    setNextQuestion(quizz[currentQuestionIndex]);
 }
 
 function showResultMessage() {
     const resultMessage = document.createElement("p");
     resultMessage.id = "result-message";
-    resultMessage.innerText = `¡Has acertado ${score} preguntas de ${questions.length}!`;
+    resultMessage.innerText = `¡Has acertado ${score} preguntas de ${quizz.length}!`;
     questionContainerElement.appendChild(resultMessage);
 }
 
@@ -145,7 +148,7 @@ function resetGame() {
 
 nextButton.addEventListener("click", () => {
     currentQuestionIndex++;
-    setNextQuestion();
+    setNextQuestion(quizz[currentQuestionIndex]);
 });
 
 aboutNav.addEventListener("click", goAbout);
