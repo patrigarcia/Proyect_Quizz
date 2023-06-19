@@ -9,9 +9,28 @@
 }
 
 .correct {
-    background-color: rgb(0, 255, 72);
+    background-color: rgb(186, 247, 203);
 }
 
 .wrong {
-    background-color: rgb(255, 0, 0);
+    background-color: rgb(248, 181, 181);
+}
+
+.logo {
+    width: 30px;
+    height: 30px;
+}
+
+h1 {
+    font-family: "Cabin Sketch", cursive;
+}
+
+h3 {
+    font-family: "Comfortaa", cursive;
+}
+
+.btn-pink {
+    color: #fff;
+    background-color: #ff69b4;
+    border-color: #ff69b4;
 }

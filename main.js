@@ -1,9 +1,9 @@
 const homeNav = document.getElementById("homeNav");
-const aboutNav = document.getElementById("aboutNav");
 const homeDiv = document.getElementById("home");
-const aboutDiv = document.getElementById("about");
-const contactNav = document.getElementById("contactNav");
-const contactDiv = document.getElementById("contact");
+const questionsNav = document.getElementById("questionsNav");
+const questionsDiv = document.getElementById("questions");
+const resultsNav = document.getElementById("resultsNav");
+const resultsDiv = document.getElementById("results");
 const startButton = document.getElementById("start-btn");
 const nextButton = document.getElementById("next-btn");
 const questionContainerElement = document.getElementById("question-container");
@@ -13,17 +13,16 @@ const answerButtonsElement = document.getElementById("answer-buttons");
 let currentQuestionIndex = 0;
 let quizz;
 let score = 0;
-let questions = [];
 
 function hideViews() {
     homeDiv.classList.add("hide");
-    contactDiv.classList.add("hide");
-    aboutDiv.classList.add("hide");
+    resultsDiv.classList.add("hide");
+    questionsDiv.classList.add("hide");
 }
 
-function goAbout() {
+function goQuestions() {
     hideViews();
-    aboutDiv.classList.remove("hide");
+    questionsDiv.classList.remove("hide");
 }
 
 function goHome() {
@@ -31,9 +30,9 @@ function goHome() {
     homeDiv.classList.remove("hide");
 }
 
-function goContact() {
+function goResults() {
     hideViews();
-    contactDiv.classList.remove("hide");
+    resultsDiv.classList.remove("hide");
 }
 
 function shuffle(array) {
@@ -42,7 +41,7 @@ function shuffle(array) {
 
 function getQuestions() {
     axios
-        .get("https://opentdb.com/api.php?amount=10&category=22&difficulty=medium&type=multiple")
+        .get("https://opentdb.com/api.php?amount=10&category=22&difficulty=medium&type=multiplehttps://opentdb.com/api.php?amount=10&category=12&difficulty=easy&type=multiple")
         .then((response) => {
             quizz = response.data.results;
             console.log("Las preguntas retornadas por la API son:", quizz);
@@ -63,7 +62,7 @@ function getQuestions() {
 }
 
 function resetState() {
-    nextButton.classList.add("hide");
+    nextButton.classList.add("d-none");
     while (answerButtonsElement.firstChild) {
         answerButtonsElement.removeChild(answerButtonsElement.firstChild);
     }
@@ -88,10 +87,10 @@ function selectAnswer(evt) {
     }
 
     if (quizz.length > currentQuestionIndex + 1) {
-        nextButton.classList.remove("hide");
+        nextButton.classList.remove("d-none");
     } else {
         startButton.innerText = "Restart";
-        startButton.classList.remove("hide");
+        startButton.classList.remove("d-none"); //Me quede acá!!!
         showResultMessage();
     }
     setStatusClass();
@@ -110,15 +109,19 @@ function showQuestion(currentQuestion) {
     });
 }
 
-function setNextQuestion(question) {
+function setNextQuestion(quizz) {
     resetState();
-    nextButton.classList.add("hide");
-    showQuestion(question);
+    nextButton.classList.add("d-none");
+    showQuestion(quizz);
+    console.log("Que es: ", quizz);
 }
 
 function startGame() {
-    startButton.classList.add("hide");
-    nextButton.classList.add("hide");
+    startButton.classList.add("d-none");
+
+    nextButton.classList.add("d-none");
+    console.log(nextButton.classList);
+
     questionContainerElement.classList.remove("hide");
     setNextQuestion(quizz[currentQuestionIndex]);
 }
@@ -151,8 +154,8 @@ nextButton.addEventListener("click", () => {
     setNextQuestion(quizz[currentQuestionIndex]);
 });
 
-aboutNav.addEventListener("click", goAbout);
+questionsNav.addEventListener("click", goQuestions);
 homeNav.addEventListener("click", goHome);
-contactNav.addEventListener("click", goContact);
+resultsNav.addEventListener("click", goResults);
 
 getQuestions();

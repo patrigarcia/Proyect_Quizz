@@ -5,40 +5,96 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" href="style.css" />
+        <link rel="stylesheet" href="bootstrap.min.css" />
+        <link rel="icon" href="images/favicon.png" type="image/x-icon" />
         <link
             href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
             rel="stylesheet"
             integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM"
             crossorigin="anonymous"
         />
-        <title>Quiz</title>
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&family=Comfortaa&display=swap" rel="stylesheet" />
+
+        <title>GeoQuizz</title>
     </head>
     <body>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-terciary">
-            <span id="homeNav" class="navbar-brand">home</span>
-            <span id="aboutNav" class="navbar-brand">about</span>
-            <span id="contactNav" class="navbar-brand">contact</span>
+        <!------------------NAVBAR--------------->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">
+                    <img src="images/logo.svg" alt="Logo" class="d-inline-block align-text-top logo" />
+                </a>
+                <a class="navbar-brand" href="#">MusiQuizz</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a id="homeNav" href="#" aria-current="home" class="nav-link mx-2 active">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a id="questionsNav" href="#" class="nav-link mx-2">Questions</a>
+                        </li>
+                        <li class="nav-item">
+                            <a id="resultsNav" href="#" class="nav-link mx-2">Results</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </nav>
 
-        <div id="home">
-            <h1>Home Page</h1>
+        <!--------------------------------->
+
+        <div id="home" class="card">
+            <div class="card-body text-center">
+                <h1>MusiQuizz</h1>
+                <h3>
+                    <small class="text-muted">¿What do you know about music?</small>
+                </h3>
+            </div>
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <form>
+                                    <div class="mb-3">
+                                        <label for="name" class="form-label">Nickname:</label>
+                                        <input type="text" class="form-control" id="name" name="name" required />
+                                    </div>
+                                    <div class="text-center">
+                                        <button type="submit" class="btn btn-pink">Rock it!</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--------------------------------->
+
+        <div id="questions" class="hide">
+            <h1>Questions</h1>
             <div id="question-container" class="hide">
                 <div id="question">Question</div>
                 <div id="answer-buttons"></div>
             </div>
         </div>
+        <!--------------------------------->
 
-        <div id="about" class="hide">
-            <h1>About page</h1>
+        <div id="results" class="hide">
+            <h1>Results</h1>
         </div>
-        <div id="contact" class="hide">
-            <h1>Contact page</h1>
-        </div>
+        <!--------------------------------->
 
         <div class="controls">
-            <button id="start-btn">Start</button>
-            <button id="next-btn" class="hide">Next</button>
+            <button id="start-btn" class="btn btn-primary">Start</button>
+            <button id="next-btn" class="d-none btn btn-primary">Next</button>
         </div>
+        <!--------------------------------->
 
         <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
         <script
@@ -46,6 +102,6 @@
             integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
             crossorigin="anonymous"
         ></script>
-        <script src="main.js"></script>
+        <script src="noCommitear.js"></script>
     </body>
 </html>
