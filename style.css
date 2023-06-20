@@ -9,11 +9,11 @@
 }
 
 .correct {
-    background-color: rgb(186, 247, 203);
+    background-color: rgb(139, 250, 171);
 }
 
 .wrong {
-    background-color: rgb(248, 181, 181);
+    background-color: rgb(246, 144, 144);
 }
 
 .logo {
@@ -32,10 +32,23 @@ h3 {
     font-family: "Comfortaa", cursive;
 }
 
-.boton-rock {
-    padding: 8px;
+.card-title {
+    font-size: 3em;
+    font-family: "Cabin Sketch", cursive;
+}
+
+.rockButton,
+#start-btn,
+#next-btn {
+    padding: 2% 5% 2% 5%;
     color: #fff;
     background-color: #ff69b4;
     border-color: #ff69b4;
     border-radius: 10px;
+}
+
+.custom-card,
+#resultMsg {
+    max-width: 600px;
+    margin: 0 auto;
 }

@@ -44,7 +44,7 @@
             </div>
         </nav>
 
-        <!--------------------------------->
+        <!-----------------HOME---------------->
 
         <div id="home" class="container text-center">
             <p id="titulo1">MusiQuizz</p>
@@ -60,12 +60,11 @@
                         <div class="card">
                             <div class="card-body text-center">
                                 <form>
-                                    <div class="mb-3">
-                                        <label for="name" class="form-label">Nickname:</label>
-                                        <input type="text" class="form-control" id="name" name="name" required />
-                                    </div>
-                                    <div class="text-center">
-                                        <button type="submit" class="boton-rock">Rock it!</button>
+                                    <div class="mb-3 text-center">
+                                        <label for="nickName" class="form-label">Nickname:</label>
+                                        <input type="text" class="form-control" id="nickName" name="name" required />
+
+                                        <button class="rockButton mt-4">Rock it!</button>
                                     </div>
                                 </form>
                             </div>
@@ -73,29 +72,31 @@
                     </div>
                 </div>
             </div>
-            <h1>Score</h1>
-
-            <div class="contenedor">
-                <canvas id="myChart"></canvas>
-            </div>
         </div>
-        <!--------------------------------->
+        <!----------------QUESTIONS----------------->
 
-        <div id="questions" class="hide">
-            <h1>Questions</h1>
-            <div id="question-container" class="hide">
-                <div id="question">Question</div>
-                <div id="answer-buttons"></div>
+        <div id="questions" class="hide quesTitulo m-4 text-center">
+            <div class="card custom-card">
+                <div class="card-body">
+                    <p class="card-title">Questions</p>
+                    <div id="question-container" class="hide">
+                        <div id="question" class="card-text"></div>
+                        <div id="answer-buttons" class="row justify-content-center m-2"></div>
+                    </div>
+                    <div class="controls">
+                        <button id="start-btn" class="btn btn-primary">Start</button>
+                        <button id="next-btn" class="d-none btn btn-primary">Next</button>
+                    </div>
+                </div>
             </div>
-            <div class="controls">
-                <button id="start-btn" class="btn btn-primary">Start</button>
-                <button id="next-btn" class="d-none btn btn-primary">Next</button>
-            </div>
+            <div id="resultMsg"></div>
         </div>
-        <!--------------------------------->
+
+        <!----------------RESULTS----------------->
 
         <div id="results" class="hide">
             <h1>Results</h1>
+            <div id="cardContainer"></div>
         </div>
         <!--------------------------------->
 
@@ -107,9 +108,6 @@
             integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
             crossorigin="anonymous"
         ></script>
-        <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-        <script defer src="graficas.js"></script>
-
-        <script src="noCommitear.js"></script>
+        <script src="main.js"></script>
     </body>
 </html>
