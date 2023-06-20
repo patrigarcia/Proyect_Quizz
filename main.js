@@ -85,12 +85,13 @@ function selectAnswer(evt) {
     if (this.dataset.correct === "true") {
         score++;
     }
+    console.log(this.dataset.correct);
 
     if (quizz.length > currentQuestionIndex + 1) {
         nextButton.classList.remove("d-none");
     } else {
         startButton.innerText = "Restart";
-        startButton.classList.remove("d-none"); //Me quede acá!!!
+        startButton.classList.remove("d-none");
         showResultMessage();
     }
     setStatusClass();
@@ -113,7 +114,6 @@ function setNextQuestion(quizz) {
     resetState();
     nextButton.classList.add("d-none");
     showQuestion(quizz);
-    console.log("Que es: ", quizz);
 }
 
 function startGame() {
@@ -125,6 +125,8 @@ function startGame() {
     questionContainerElement.classList.remove("hide");
     setNextQuestion(quizz[currentQuestionIndex]);
 }
+
+function nickName() {}
 
 function showResultMessage() {
     const resultMessage = document.createElement("p");

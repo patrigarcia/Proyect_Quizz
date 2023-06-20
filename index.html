@@ -16,7 +16,7 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&family=Comfortaa&display=swap" rel="stylesheet" />
 
-        <title>GeoQuizz</title>
+        <title>MusiQuizz</title>
     </head>
     <body>
         <!------------------NAVBAR--------------->
@@ -25,7 +25,6 @@
                 <a class="navbar-brand" href="#">
                     <img src="images/logo.svg" alt="Logo" class="d-inline-block align-text-top logo" />
                 </a>
-                <a class="navbar-brand" href="#">MusiQuizz</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -47,13 +46,14 @@
 
         <!--------------------------------->
 
-        <div id="home" class="card">
-            <div class="card-body text-center">
-                <h1>MusiQuizz</h1>
+        <div id="home" class="container text-center">
+            <p id="titulo1">MusiQuizz</p>
+            <div class="m-4">
                 <h3>
                     <small class="text-muted">¿What do you know about music?</small>
                 </h3>
             </div>
+
             <div class="container">
                 <div class="row justify-content-center">
                     <div class="col-md-6">
@@ -65,13 +65,18 @@
                                         <input type="text" class="form-control" id="name" name="name" required />
                                     </div>
                                     <div class="text-center">
-                                        <button type="submit" class="btn btn-pink">Rock it!</button>
+                                        <button type="submit" class="boton-rock">Rock it!</button>
                                     </div>
                                 </form>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
+            <h1>Score</h1>
+
+            <div class="contenedor">
+                <canvas id="myChart"></canvas>
             </div>
         </div>
         <!--------------------------------->
@@ -82,6 +87,10 @@
                 <div id="question">Question</div>
                 <div id="answer-buttons"></div>
             </div>
+            <div class="controls">
+                <button id="start-btn" class="btn btn-primary">Start</button>
+                <button id="next-btn" class="d-none btn btn-primary">Next</button>
+            </div>
         </div>
         <!--------------------------------->
 
@@ -90,10 +99,6 @@
         </div>
         <!--------------------------------->
 
-        <div class="controls">
-            <button id="start-btn" class="btn btn-primary">Start</button>
-            <button id="next-btn" class="d-none btn btn-primary">Next</button>
-        </div>
         <!--------------------------------->
 
         <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
@@ -102,6 +107,9 @@
             integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
             crossorigin="anonymous"
         ></script>
+        <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script defer src="graficas.js"></script>
+
         <script src="noCommitear.js"></script>
     </body>
 </html>

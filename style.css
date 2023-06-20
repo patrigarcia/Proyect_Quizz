@@ -21,16 +21,21 @@
     height: 30px;
 }
 
-h1 {
+#titulo1 {
+    color: white;
+    font-size: 3em;
     font-family: "Cabin Sketch", cursive;
 }
 
 h3 {
+    color: white;
     font-family: "Comfortaa", cursive;
 }
 
-.btn-pink {
+.boton-rock {
+    padding: 8px;
     color: #fff;
     background-color: #ff69b4;
     border-color: #ff69b4;
+    border-radius: 10px;
 }
