@@ -14,6 +14,7 @@ const rockButton = document.querySelector(".rockButton");
 const cardContainer = document.getElementById("cardContainer");
 const message = document.getElementById("resultMsg");
 const validationMsg = document.getElementById("validationMsg");
+const progressBar = document.getElementById("progress-bar");
 
 let currentQuestionIndex = 0;
 let quizz;
@@ -45,17 +46,13 @@ const generateUserCard = () => {
 
         const listGroup = document.createElement("ul");
         listGroup.classList.add("list-group");
-
         const listItem = document.createElement("li");
         listItem.classList.add("list-group-item", "d-flex", "justify-content-between", "align-items-center", "m-2");
-
         const playerText = document.createTextNode(`${key}`);
         const scoreText = document.createTextNode(`${localStorage.getItem(key)}`);
-
         const span = document.createElement("span");
         span.classList.add("badge", "bg-primary", "rounded-pill");
         span.appendChild(scoreText);
-
         listItem.appendChild(playerText);
         listItem.appendChild(span);
         listGroup.appendChild(listItem);
@@ -66,14 +63,12 @@ const generateUserCard = () => {
 
 const initGameRock = (e) => {
     e.preventDefault();
-
     const user = {
         nickname: nicknameInput.value,
         score: score,
     };
-
     if (user.nickname.length < 1) {
-        validationMsg.textContent = "Carga tu nickname para comenzar la partida";
+        validationMsg.textContent = "Write your nickname to start the game";
     } else {
         validationMsg.textContent = "";
         goQuestions();
@@ -98,7 +93,7 @@ const decodeHTML = (html) => {
 
 const getQuestions = () => {
     axios
-        .get("https://opentdb.com/api.php?amount=3&category=22&difficulty=medium&type=multiple")
+        .get("https://opentdb.com/api.php?amount=4&category=12&difficulty=easy&type=multiple")
         .then((response) => {
             quizz = response.data.results;
             quizz = quizz.map((challenge) => ({
@@ -164,17 +159,25 @@ const showQuestion = (currentQuestion) => {
     });
 };
 
+const updateProgressBar = () => {
+    const progress = ((currentQuestionIndex + 1) / quizz.length) * 100;
+
+    progressBar.style.width = progress + "%";
+    progressBar.setAttribute("aria-valuenow", progress);
+};
+
 const setNextQuestion = () => {
     resetState();
-    nextButton.classList.add("d-none");
     showQuestion(quizz[currentQuestionIndex]);
+    updateProgressBar();
 };
 
 const startGame = () => {
     startButton.classList.add("d-none");
-    nextButton.classList.add("d-none");
+    nextButton.classList.remove("d-none");
     questionContainerElement.classList.remove("hide");
     setNextQuestion();
+    updateProgressBar();
 };
 
 const showResultMessage = () => {
@@ -183,13 +186,22 @@ const showResultMessage = () => {
     const cardBody = document.createElement("div");
     cardBody.classList.add("card-body");
     const resultMessage = document.createElement("p");
-    resultMessage.innerText = `¡Has acertado ${score} preguntas de ${quizz.length}!`;
+    resultMessage.innerText = `¡You got ${score} questions out of ${quizz.length} right!`;
     resultMessage.classList.add("lead");
     cardBody.appendChild(resultMessage);
     card.appendChild(cardBody);
     message.innerHTML = "";
     message.appendChild(card);
     localStorage.setItem(nicknameInput.value, score);
+    const resultButton = document.createElement("button");
+    resultButton.innerText = "See Results";
+    resultButton.classList.add("btn", "mt-3");
+    resultButton.addEventListener("click", goResults);
+
+    cardBody.appendChild(resultButton);
+    card.appendChild(cardBody);
+    message.innerHTML = "";
+    message.appendChild(card);
 };
 
 const resetGame = () => {

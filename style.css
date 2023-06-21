@@ -43,12 +43,14 @@ h3 {
 
 .rockButton,
 #start-btn,
-#next-btn {
+#next-btn,
+button.btn.mt-3 {
     padding: 2% 5% 2% 5%;
     color: #fff;
     background-color: #ff69b4;
     border-color: #ff69b4;
     border-radius: 10px;
+    font-family: "Comfortaa", cursive;
 }
 
 .custom-card,
@@ -74,4 +76,26 @@ ul.list-group {
 p.lead {
     font-size: 1.8em;
     font-family: "Cabin Sketch", cursive;
+}
+#progress-bar {
+    background-color: #ff69b4;
+    height: 80px;
+}
+div.progress {
+    height: 25px;
+    margin: 20px;
+}
+
+div#question.card-text {
+    font-family: "Comfortaa", cursive;
+    margin-bottom: 30px;
+}
+
+label.form-label {
+    font-size: 1.2em;
+    font-family: "Comfortaa", cursive;
+}
+
+small.text-muted {
+    filter: drop-shadow(0.5em 0.1em 0.3em white);
 }
