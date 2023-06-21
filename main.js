@@ -20,10 +20,6 @@ let currentQuestionIndex = 0;
 let quizz;
 let score = 0;
 
-//------------------------------------------------//
-
-//------------------------------------------------//
-
 const hideViews = () => {
     homeDiv.classList.add("hide");
     resultsDiv.classList.add("hide");
@@ -41,6 +37,8 @@ const goHome = () => {
 };
 
 const generateUserCard = () => {
+    let cardContainer = document.getElementById("cardContainer");
+    cardContainer.innerHTML = "";
     for (let i = 0; i < localStorage.length; i++) {
         let key = localStorage.key(i);
 
@@ -57,7 +55,7 @@ const generateUserCard = () => {
         listItem.appendChild(span);
         listGroup.appendChild(listItem);
 
-        document.getElementById("cardContainer").appendChild(listGroup);
+        cardContainer.appendChild(listGroup);
     }
 };
 
@@ -71,7 +69,7 @@ const initGameRock = (e) => {
         validationMsg.textContent = "Write your nickname to start the game";
     } else {
         validationMsg.textContent = "";
-        goQuestions();
+        startGame();
     }
 };
 
@@ -93,7 +91,7 @@ const decodeHTML = (html) => {
 
 const getQuestions = () => {
     axios
-        .get("https://opentdb.com/api.php?amount=4&category=12&difficulty=easy&type=multiple")
+        .get("https://opentdb.com/api.php?amount=10&category=12&difficulty=easy&type=multiple")
         .then((response) => {
             quizz = response.data.results;
             quizz = quizz.map((challenge) => ({
@@ -139,10 +137,12 @@ const selectAnswer = function (evt) {
     } else {
         startButton.innerText = "Restart";
         startButton.classList.remove("d-none");
+        message.classList.remove("hide");
         showResultMessage();
     }
     setStatusClass();
-    localStorage.setItem(nicknameInput.value, score);
+    updateProgressBar();
+    localStorage.setItem(getNickname(nicknameInput.value), score);
 };
 
 const showQuestion = (currentQuestion) => {
@@ -169,15 +169,14 @@ const updateProgressBar = () => {
 const setNextQuestion = () => {
     resetState();
     showQuestion(quizz[currentQuestionIndex]);
-    updateProgressBar();
 };
 
 const startGame = () => {
+    goQuestions();
     startButton.classList.add("d-none");
     nextButton.classList.remove("d-none");
     questionContainerElement.classList.remove("hide");
     setNextQuestion();
-    updateProgressBar();
 };
 
 const showResultMessage = () => {
@@ -192,7 +191,7 @@ const showResultMessage = () => {
     card.appendChild(cardBody);
     message.innerHTML = "";
     message.appendChild(card);
-    localStorage.setItem(nicknameInput.value, score);
+    localStorage.setItem(getNickname(nicknameInput.value), score);
     const resultButton = document.createElement("button");
     resultButton.innerText = "See Results";
     resultButton.classList.add("btn", "mt-3");
@@ -207,9 +206,11 @@ const showResultMessage = () => {
 const resetGame = () => {
     score = 0;
     currentQuestionIndex = 0;
+    updateProgressBar();
     questionContainerElement.classList.add("hide");
     startButton.classList.remove("hide");
     questionElement.innerText = "";
+    message.classList.add("hide");
     resetState();
     while (answerButtonsElement.firstChild) {
         answerButtonsElement.removeChild(answerButtonsElement.firstChild);
@@ -218,6 +219,10 @@ const resetGame = () => {
     if (resultMessage) {
         resultMessage.remove();
     }
+};
+
+const getNickname = (nickname) => {
+    return nickname === "" ? "Anonymous" : nickname;
 };
 
 nextButton.addEventListener("click", () => {
