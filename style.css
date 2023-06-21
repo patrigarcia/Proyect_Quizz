@@ -52,3 +52,13 @@ h3 {
     max-width: 600px;
     margin: 0 auto;
 }
+
+.band {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    opacity: 0.3;
+    z-index: -1;
+  }
+  
