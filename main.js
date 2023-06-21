@@ -13,6 +13,7 @@ const nicknameInput = document.getElementById("nickName");
 const rockButton = document.querySelector(".rockButton");
 const cardContainer = document.getElementById("cardContainer");
 const message = document.getElementById("resultMsg");
+const validationMsg = document.getElementById("validationMsg");
 
 let currentQuestionIndex = 0;
 let quizz;
@@ -39,40 +40,44 @@ const goHome = () => {
 };
 
 const generateUserCard = () => {
-    const nickname = localStorage.getItem("nickname");
-    const playerScore = localStorage.getItem(nickname);
-    const cardContent = `
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">General score by players</h5>
-          <div class="table-responsive">
-            <table class="table">
-              <tbody>
-                <tr>
-                  <th>Nickname:</th>
-                  <td>${nickname}</td>
-                </tr>
-                <tr>
-                  <th>Score:</th>
-                  <td>${playerScore}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    `;
+    for (let i = 0; i < localStorage.length; i++) {
+        let key = localStorage.key(i);
 
-    cardContainer.innerHTML = cardContent;
+        const listGroup = document.createElement("ul");
+        listGroup.classList.add("list-group");
+
+        const listItem = document.createElement("li");
+        listItem.classList.add("list-group-item", "d-flex", "justify-content-between", "align-items-center", "m-2");
+
+        const playerText = document.createTextNode(`${key}`);
+        const scoreText = document.createTextNode(`${localStorage.getItem(key)}`);
+
+        const span = document.createElement("span");
+        span.classList.add("badge", "bg-primary", "rounded-pill");
+        span.appendChild(scoreText);
+
+        listItem.appendChild(playerText);
+        listItem.appendChild(span);
+        listGroup.appendChild(listItem);
+
+        document.getElementById("cardContainer").appendChild(listGroup);
+    }
 };
 
 const initGameRock = (e) => {
     e.preventDefault();
+
     const user = {
         nickname: nicknameInput.value,
         score: score,
     };
-    goQuestions();
+
+    if (user.nickname.length < 1) {
+        validationMsg.textContent = "Carga tu nickname para comenzar la partida";
+    } else {
+        validationMsg.textContent = "";
+        goQuestions();
+    }
 };
 
 const goResults = () => {
@@ -85,15 +90,21 @@ const shuffle = (array) => {
     return array.sort(() => Math.random() - 0.5);
 };
 
+const decodeHTML = (html) => {
+    const txt = document.createElement("textarea");
+    txt.innerHTML = html;
+    return txt.value;
+};
+
 const getQuestions = () => {
     axios
-        .get("https://opentdb.com/api.php?amount=10&category=22&difficulty=medium&type=multiplehttps://opentdb.com/api.php?amount=10&category=12&difficulty=easy&type=multiple")
+        .get("https://opentdb.com/api.php?amount=3&category=22&difficulty=medium&type=multiple")
         .then((response) => {
             quizz = response.data.results;
             quizz = quizz.map((challenge) => ({
-                question: challenge.question,
-                correctAnswer: challenge.correct_answer,
-                allAnswers: shuffle([...challenge.incorrect_answers, challenge.correct_answer]),
+                question: decodeHTML(challenge.question),
+                correctAnswer: decodeHTML(challenge.correct_answer),
+                allAnswers: shuffle([...challenge.incorrect_answers, challenge.correct_answer]).map(decodeHTML),
             }));
             startButton.addEventListener("click", () => {
                 resetGame();
@@ -161,9 +172,7 @@ const setNextQuestion = () => {
 
 const startGame = () => {
     startButton.classList.add("d-none");
-
     nextButton.classList.add("d-none");
-
     questionContainerElement.classList.remove("hide");
     setNextQuestion();
 };
@@ -171,20 +180,15 @@ const startGame = () => {
 const showResultMessage = () => {
     const card = document.createElement("div");
     card.classList.add("card", "my-4");
-
     const cardBody = document.createElement("div");
     cardBody.classList.add("card-body");
-
     const resultMessage = document.createElement("p");
     resultMessage.innerText = `¡Has acertado ${score} preguntas de ${quizz.length}!`;
     resultMessage.classList.add("lead");
-
     cardBody.appendChild(resultMessage);
     card.appendChild(cardBody);
-
     message.innerHTML = "";
     message.appendChild(card);
-
     localStorage.setItem(nicknameInput.value, score);
 };
 

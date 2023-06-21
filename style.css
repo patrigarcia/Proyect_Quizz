@@ -21,10 +21,11 @@
     height: 30px;
 }
 
-#titulo1 {
+.titulo1 {
     color: white;
     font-size: 3em;
     font-family: "Cabin Sketch", cursive;
+    text-align: center;
 }
 
 h3 {
@@ -35,6 +36,9 @@ h3 {
 .card-title {
     font-size: 3em;
     font-family: "Cabin Sketch", cursive;
+}
+.results {
+    color: #fff;
 }
 
 .rockButton,
@@ -60,5 +64,14 @@ h3 {
     width: 100%;
     opacity: 0.3;
     z-index: -1;
-  }
-  
+}
+
+ul.list-group {
+    width: 50%;
+    margin: 0 auto;
+}
+
+p.lead {
+    font-size: 1.8em;
+    font-family: "Cabin Sketch", cursive;
+}

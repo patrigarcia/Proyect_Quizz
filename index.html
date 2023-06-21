@@ -47,7 +47,7 @@
         <!-----------------HOME---------------->
 
         <div id="home" class="container text-center">
-            <p id="titulo1">MusiQuizz</p>
+            <p class="titulo1 m-5">MusiQuizz</p>
             <div class="m-4">
                 <h3>
                     <small class="text-muted">¿What do you know about music?</small>
@@ -61,7 +61,8 @@
                             <div class="card-body text-center">
                                 <form>
                                     <div class="mb-3 text-center">
-                                        <label for="nickName" class="form-label">Nickname:</label>
+                                        <label for="nickName" class="form-label">Nickname:</label> <br />
+                                        <span id="validationMsg" class="text-danger mt-4"></span>
                                         <input type="text" class="form-control" id="nickName" name="name" required />
 
                                         <button class="rockButton mt-4">Rock it!</button>
@@ -94,11 +95,14 @@
 
         <!----------------RESULTS----------------->
 
-        <div id="results" class="hide">
-            <h1>Results</h1>
-            <div id="cardContainer"></div>
+        <div id="results" class="hide container">
+            <p class="titulo1 m-5">Results</p>
+            <div id="cardContainer" class="card-container"></div>
         </div>
+
         <!--------------------------------->
+
+        <img src="images/rock_b.png" class="img-fluid band" alt="rock_back" />
 
         <!--------------------------------->
 
@@ -108,6 +112,6 @@
             integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
             crossorigin="anonymous"
         ></script>
-        <script src="main.js"></script>
+        <script src="noCommitear.js"></script>
     </body>
 </html>
