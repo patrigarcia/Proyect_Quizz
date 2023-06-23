@@ -37,26 +37,15 @@ const goHome = () => {
 };
 
 const generateUserCard = () => {
-    let cardContainer = document.getElementById("cardContainer");
+    const cardContainer = document.getElementById("cardContainer");
     cardContainer.innerHTML = "";
-    for (let i = 0; i < localStorage.length; i++) {
-        let key = localStorage.key(i);
 
-        const listGroup = document.createElement("ul");
-        listGroup.classList.add("list-group");
+    Object.entries(localStorage).forEach(([key, value]) => {
         const listItem = document.createElement("li");
-        listItem.classList.add("list-group-item", "d-flex", "justify-content-between", "align-items-center", "m-2");
-        const playerText = document.createTextNode(`${key}`);
-        const scoreText = document.createTextNode(`${localStorage.getItem(key)}`);
-        const span = document.createElement("span");
-        span.classList.add("badge", "bg-primary", "rounded-pill");
-        span.appendChild(scoreText);
-        listItem.appendChild(playerText);
-        listItem.appendChild(span);
-        listGroup.appendChild(listItem);
-
-        cardContainer.appendChild(listGroup);
-    }
+        listItem.classList.add("list-group-item", "d-flex", "justify-content-between", "align-items-center", "bg-white", "m-2", "p-2", "rounded");
+        listItem.innerHTML = `${key}<span class="badge bg-primary rounded-pill">${value}</span>`;
+        cardContainer.appendChild(listItem);
+    });
 };
 
 const initGameRock = (e) => {
@@ -65,10 +54,8 @@ const initGameRock = (e) => {
         nickname: nicknameInput.value,
         score: score,
     };
-    if (user.nickname.length < 1) {
-        validationMsg.textContent = "Write your nickname to start the game";
-    } else {
-        validationMsg.textContent = "";
+    validationMsg.textContent = user.nickname.length < 1 ? "Write your nickname to start the game" : "";
+    if (user.nickname.length >= 1) {
         startGame();
     }
 };
@@ -89,49 +76,36 @@ const decodeHTML = (html) => {
     return txt.value;
 };
 
-const getQuestions = () => {
-    axios
-        .get("https://opentdb.com/api.php?amount=10&category=12&difficulty=easy&type=multiple")
-        .then((response) => {
-            quizz = response.data.results;
-            quizz = quizz.map((challenge) => ({
-                question: decodeHTML(challenge.question),
-                correctAnswer: decodeHTML(challenge.correct_answer),
-                allAnswers: shuffle([...challenge.incorrect_answers, challenge.correct_answer]).map(decodeHTML),
-            }));
-            startButton.addEventListener("click", () => {
-                resetGame();
-                startGame();
-            });
-        })
-        .catch((err) => {
-            console.error("Error", err);
+const getQuestions = async () => {
+    try {
+        const response = await axios.get("https://opentdb.com/api.php?amount=3&category=12&difficulty=easy&type=multiple");
+        quizz = response.data.results.map((challenge) => ({
+            question: decodeHTML(challenge.question),
+            correctAnswer: decodeHTML(challenge.correct_answer),
+            allAnswers: shuffle([...challenge.incorrect_answers, challenge.correct_answer]).map(decodeHTML),
+        }));
+        startButton.addEventListener("click", () => {
+            resetGame();
+            startGame();
         });
+    } catch (err) {
+        console.error("Error", err);
+    }
 };
 
 const resetState = () => {
     nextButton.classList.add("d-none");
-    while (answerButtonsElement.firstChild) {
-        answerButtonsElement.removeChild(answerButtonsElement.firstChild);
-    }
+    answerButtonsElement.innerHTML = "";
 };
 
 const setStatusClass = () => {
     Array.from(answerButtonsElement.children).forEach((button) => {
-        if (button.dataset.correct) {
-            button.classList.add("correct");
-            button.classList.add("btn", "btn-success");
-        } else {
-            button.classList.add("wrong");
-            button.classList.add("btn", "btn-danger");
-        }
+        button.classList.add(button.dataset.correct ? "correct" : "wrong", "btn", button.dataset.correct ? "btn-success" : "btn-danger");
     });
 };
 
-const selectAnswer = function (evt) {
-    if (this.getAttribute("data-correct") === "true") {
-        score++;
-    }
+const selectAnswer = function () {
+    score += this.getAttribute("data-correct") === "true" ? 1 : 0;
     if (quizz.length > currentQuestionIndex + 1) {
         nextButton.classList.remove("d-none");
     } else {
@@ -182,30 +156,43 @@ const startGame = () => {
 const showResultMessage = () => {
     const card = document.createElement("div");
     card.classList.add("card", "my-4");
-    const cardBody = document.createElement("div");
-    cardBody.classList.add("card-body");
+
     const resultMessage = document.createElement("p");
     resultMessage.innerText = `¡You got ${score} questions out of ${quizz.length} right!`;
     resultMessage.classList.add("lead");
-    cardBody.appendChild(resultMessage);
-    card.appendChild(cardBody);
-    message.innerHTML = "";
-    message.appendChild(card);
-    localStorage.setItem(getNickname(nicknameInput.value), score);
+
     const resultButton = document.createElement("button");
     resultButton.innerText = "See Results";
     resultButton.classList.add("btn", "mt-3");
     resultButton.addEventListener("click", goResults);
 
+    const cardBody = document.createElement("div");
+    cardBody.classList.add("card-body");
+    cardBody.appendChild(resultMessage);
     cardBody.appendChild(resultButton);
+
     card.appendChild(cardBody);
+
     message.innerHTML = "";
     message.appendChild(card);
+
+    localStorage.setItem(getNickname(nicknameInput.value), score);
+};
+
+const goBackHome = () => {
+    resultsDiv.classList.add("hide");
+    questionsDiv.classList.add("hide");
+    homeDiv.classList.remove("hide");
+    nicknameInput = "";
+};
+
+const restartGameVariables = () => {
+    score = 0;
+    currentQuestionIndex = 0;
 };
 
 const resetGame = () => {
-    score = 0;
-    currentQuestionIndex = 0;
+    restartGameVariables();
     updateProgressBar();
     questionContainerElement.classList.add("hide");
     startButton.classList.remove("hide");
