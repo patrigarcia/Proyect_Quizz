@@ -23,7 +23,7 @@
 
 .titulo1 {
     color: white;
-    font-size: 3em;
+    font-size: 4em;
     font-family: "Cabin Sketch", cursive;
     text-align: center;
 }
@@ -44,13 +44,19 @@ h3 {
 .rockButton,
 #start-btn,
 #next-btn,
-button.btn.mt-3 {
+button.btn.mt-3,
+button#playAgainBtn.btn.mt-4 {
     padding: 2% 5% 2% 5%;
     color: #fff;
     background-color: #ff69b4;
     border-color: #ff69b4;
     border-radius: 10px;
     font-family: "Comfortaa", cursive;
+    filter: drop-shadow(0.1em 0.1em 0.3em rgb(199, 66, 144));
+}
+
+button#playAgainBtn.btn.mt-4 {
+    padding: 1.5% 3% 1.5% 3% !important;
 }
 
 .custom-card,
@@ -89,6 +95,13 @@ div.progress {
 div#question.card-text {
     font-family: "Comfortaa", cursive;
     margin-bottom: 30px;
+}
+
+div#cardContainer.card-container {
+    max-width: 50%;
+    margin: 0 auto;
+    font-family: "Comfortaa", cursive;
+    filter: drop-shadow(0.1em 0.1em 0.3em white);
 }
 
 label.form-label {

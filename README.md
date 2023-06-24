@@ -1,29 +1,43 @@
-# Proyecto Quiz 🧠
+![foto](images/Rdm.png)
 
-En este proyecto se ha desarrollado un juego quiz de preguntas y respuestas que cumple los siguientes requisitos:
+# Quizz Project 🧠
 
--   Manipulación dinámica del DOM.
--   Creación de una página SPA para las preguntas.
--   Manejo de ES6.
--   Asincronía, usando API de preguntas.
--   Uso de Bootstrap framework.
--   Readme con explicación del proyecto.
+In this project, a quizz game with questions and answers has been developed in order to meet the following requirements:
 
-## Desarrollo del proyecto 🔧
+-   DOM dynamic manipulation.
+-   SPA (Single Page Application) based website.
+-   Use of ES6.
+-   Use of a public API for fetching the questions in an asynchronous manner.
+-   Use of Bootstrap framework.
+-   README file with project description.
 
-El proyecto ha sido realizado en un plazo de siete días.
-Consta de tres archivos troncales: index.html, main.js y style.css.
-En primera instancia se ha desarrollado la lógica del juego, para después dar paso a los estilos.
-Se han implementado las funciones necesarias para ejecutar el código de la forma más eficiente posible.
+## Project Development 🔧
 
-### Tecnologías utilizadas 💻
+The project was completed within a seven-day timeframe as part of an exercise for **The Bridge Valencia's FullStack Bootcamp**.
 
-Para este proyecto se han utilizado las tecnologías aprendidas hasta la fecha: HTML, CSS y JS (uso de SPA y API), y framework de CSS(Bootstrap).
+It consists of three core files: index.html, main.js, and style.css.
+The game logic was developed first, and then followed by the definition of styles.
 
-### Preview
+The necessary functions were implemented to execute the code as efficiently as possible.
 
--   Vista general del quiz
+## Technologies Used 💻
+
+Up to this point in the course, the technologies learned and used were the following:
+
+-   HTML.
+-   CSS.
+-   JavaScript (including SPA and API usage with Axios).
+-   Bootstrap Framework.
+
+Preview:
 
 ![foto](images/gif_musiquizz.gif)
 
----
+## Future work
+
+1. Allow the user to select the question's theme, difficulty and number of questions to be answered.
+2. Play sounds when players gets correct/incorrect answers.
+3. Show a graph with the best players according to their scores.
+4. Show a picture on every question for visual hint.
+
+#### Developed by _Patricia González Garcia_.

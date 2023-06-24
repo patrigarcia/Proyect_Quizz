@@ -15,70 +15,14 @@ const cardContainer = document.getElementById("cardContainer");
 const message = document.getElementById("resultMsg");
 const validationMsg = document.getElementById("validationMsg");
 const progressBar = document.getElementById("progress-bar");
+const playAgainBtn = document.getElementById("playAgainBtn");
 
+//--------------------------- VARIABLES GLOBALES -------------------------------------//
 let currentQuestionIndex = 0;
 let quizz;
 let score = 0;
 
-const hideViews = () => {
-    homeDiv.classList.add("hide");
-    resultsDiv.classList.add("hide");
-    questionsDiv.classList.add("hide");
-};
-
-const goQuestions = () => {
-    hideViews();
-    questionsDiv.classList.remove("hide");
-};
-
-const goHome = () => {
-    hideViews();
-    homeDiv.classList.remove("hide");
-};
-
-const generateUserCard = () => {
-    let cardContainer = document.getElementById("cardContainer");
-    cardContainer.innerHTML = "";
-    for (let i = 0; i < localStorage.length; i++) {
-        let key = localStorage.key(i);
-
-        const listGroup = document.createElement("ul");
-        listGroup.classList.add("list-group");
-        const listItem = document.createElement("li");
-        listItem.classList.add("list-group-item", "d-flex", "justify-content-between", "align-items-center", "m-2");
-        const playerText = document.createTextNode(`${key}`);
-        const scoreText = document.createTextNode(`${localStorage.getItem(key)}`);
-        const span = document.createElement("span");
-        span.classList.add("badge", "bg-primary", "rounded-pill");
-        span.appendChild(scoreText);
-        listItem.appendChild(playerText);
-        listItem.appendChild(span);
-        listGroup.appendChild(listItem);
-
-        cardContainer.appendChild(listGroup);
-    }
-};
-
-const initGameRock = (e) => {
-    e.preventDefault();
-    const user = {
-        nickname: nicknameInput.value,
-        score: score,
-    };
-    if (user.nickname.length < 1) {
-        validationMsg.textContent = "Write your nickname to start the game";
-    } else {
-        validationMsg.textContent = "";
-        startGame();
-    }
-};
-
-const goResults = () => {
-    hideViews();
-    generateUserCard();
-    resultsDiv.classList.remove("hide");
-};
-
+//-------------------------- FUNCIONES DE UTILIDAD --------------------------------------//
 const shuffle = (array) => {
     return array.sort(() => Math.random() - 0.5);
 };
@@ -89,49 +33,110 @@ const decodeHTML = (html) => {
     return txt.value;
 };
 
-const getQuestions = () => {
-    axios
-        .get("https://opentdb.com/api.php?amount=10&category=12&difficulty=easy&type=multiple")
-        .then((response) => {
-            quizz = response.data.results;
-            quizz = quizz.map((challenge) => ({
-                question: decodeHTML(challenge.question),
-                correctAnswer: decodeHTML(challenge.correct_answer),
-                allAnswers: shuffle([...challenge.incorrect_answers, challenge.correct_answer]).map(decodeHTML),
-            }));
-            startButton.addEventListener("click", () => {
-                resetGame();
-                startGame();
-            });
-        })
-        .catch((err) => {
-            console.error("Error", err);
-        });
+const getNickname = (nickname) => {
+    return nickname === "" ? "Anonymous" : nickname;
 };
 
-const resetState = () => {
-    nextButton.classList.add("d-none");
-    while (answerButtonsElement.firstChild) {
-        answerButtonsElement.removeChild(answerButtonsElement.firstChild);
-    }
+//---------------------------- VISTAS Y LISTAS DE RESULTADOS ---------------------------------------//
+const hideViews = () => {
+    homeDiv.classList.add("hide");
+    questionsDiv.classList.add("hide");
+    resultsDiv.classList.add("hide");
 };
 
-const setStatusClass = () => {
-    Array.from(answerButtonsElement.children).forEach((button) => {
-        if (button.dataset.correct) {
-            button.classList.add("correct");
-            button.classList.add("btn", "btn-success");
-        } else {
-            button.classList.add("wrong");
-            button.classList.add("btn", "btn-danger");
-        }
+const goHome = () => {
+    hideViews();
+    homeDiv.classList.remove("hide");
+};
+
+const goQuestions = () => {
+    hideViews();
+    questionsDiv.classList.remove("hide");
+};
+
+const goResults = () => {
+    hideViews();
+    generateUserCard();
+    resultsDiv.classList.remove("hide");
+};
+
+const generateUserCard = () => {
+    const cardContainer = document.getElementById("cardContainer");
+    cardContainer.innerHTML = "";
+    const results = Object.entries(localStorage).sort((a, b) => b[1] - a[1]);
+    results.forEach(([key, value]) => {
+        const listItem = document.createElement("li");
+        listItem.classList.add("list-group-item", "d-flex", "justify-content-between", "align-items-center", "bg-white", "m-2", "p-2", "rounded");
+        listItem.innerHTML = `${key}<span class="badge bg-primary rounded-pill">${value}</span>`;
+        cardContainer.appendChild(listItem);
     });
 };
 
-const selectAnswer = function (evt) {
-    if (this.getAttribute("data-correct") === "true") {
-        score++;
+//==================**====================== BLOQUE POR ORDEN DE EJECUCIÓN ====================**===================//
+
+//---------------------------- REINICIO DEL JUEGO ---------------------------------------//
+
+const restartGameVariables = () => {
+    score = 0;
+    currentQuestionIndex = 0;
+};
+
+const resetGame = () => {
+    restartGameVariables();
+    updateProgressBar();
+    nicknameInput.value = "";
+    questionContainerElement.classList.add("hide");
+    startButton.classList.remove("hide");
+    questionElement.innerText = "";
+    message.classList.add("hide");
+    resetState();
+    while (answerButtonsElement.firstChild) {
+        answerButtonsElement.removeChild(answerButtonsElement.firstChild);
     }
+    const resultMessage = document.getElementById("result-message");
+    if (resultMessage) {
+        resultMessage.remove();
+    }
+    goHome();
+};
+//---------------------------- BARRA DE PROGRESO ---------------------------------------//
+
+const updateProgressBar = () => {
+    const progress = ((currentQuestionIndex + 1) / quizz.length) * 100;
+
+    progressBar.style.width = progress + "%";
+    progressBar.setAttribute("aria-valuenow", progress);
+};
+//-------------------------------------------------------------------------------------//
+
+const setStatusClass = () => {
+    Array.from(answerButtonsElement.children).forEach((button) => {
+        button.classList.add(button.dataset.correct ? "correct" : "wrong", "btn", button.dataset.correct ? "btn-success" : "btn-danger");
+    });
+};
+
+const showResultMessage = () => {
+    const card = document.createElement("div");
+    card.classList.add("card", "my-4");
+    const resultMessage = document.createElement("p");
+    resultMessage.innerText = `¡You got ${score} questions out of ${quizz.length} right!`;
+    resultMessage.classList.add("lead");
+    const resultButton = document.createElement("button");
+    resultButton.innerText = "See Results";
+    resultButton.classList.add("btn", "mt-3");
+    resultButton.addEventListener("click", goResults);
+    const cardBody = document.createElement("div");
+    cardBody.classList.add("card-body");
+    cardBody.appendChild(resultMessage);
+    cardBody.appendChild(resultButton);
+    card.appendChild(cardBody);
+    message.innerHTML = "";
+    message.appendChild(card);
+    localStorage.setItem(getNickname(nicknameInput.value), score);
+};
+
+const selectAnswer = function () {
+    score += this.getAttribute("data-correct") === "true" ? 1 : 0;
     if (quizz.length > currentQuestionIndex + 1) {
         nextButton.classList.remove("d-none");
     } else {
@@ -159,17 +164,17 @@ const showQuestion = (currentQuestion) => {
     });
 };
 
-const updateProgressBar = () => {
-    const progress = ((currentQuestionIndex + 1) / quizz.length) * 100;
-
-    progressBar.style.width = progress + "%";
-    progressBar.setAttribute("aria-valuenow", progress);
+const resetState = () => {
+    nextButton.classList.add("d-none");
+    answerButtonsElement.innerHTML = "";
 };
 
 const setNextQuestion = () => {
     resetState();
     showQuestion(quizz[currentQuestionIndex]);
 };
+
+//---------------------------- INICIO DEL JUEGO ---------------------------------------//
 
 const startGame = () => {
     goQuestions();
@@ -179,55 +184,45 @@ const startGame = () => {
     setNextQuestion();
 };
 
-const showResultMessage = () => {
-    const card = document.createElement("div");
-    card.classList.add("card", "my-4");
-    const cardBody = document.createElement("div");
-    cardBody.classList.add("card-body");
-    const resultMessage = document.createElement("p");
-    resultMessage.innerText = `¡You got ${score} questions out of ${quizz.length} right!`;
-    resultMessage.classList.add("lead");
-    cardBody.appendChild(resultMessage);
-    card.appendChild(cardBody);
-    message.innerHTML = "";
-    message.appendChild(card);
-    localStorage.setItem(getNickname(nicknameInput.value), score);
-    const resultButton = document.createElement("button");
-    resultButton.innerText = "See Results";
-    resultButton.classList.add("btn", "mt-3");
-    resultButton.addEventListener("click", goResults);
-
-    cardBody.appendChild(resultButton);
-    card.appendChild(cardBody);
-    message.innerHTML = "";
-    message.appendChild(card);
-};
-
-const resetGame = () => {
-    score = 0;
-    currentQuestionIndex = 0;
-    updateProgressBar();
-    questionContainerElement.classList.add("hide");
-    startButton.classList.remove("hide");
-    questionElement.innerText = "";
-    message.classList.add("hide");
-    resetState();
-    while (answerButtonsElement.firstChild) {
-        answerButtonsElement.removeChild(answerButtonsElement.firstChild);
-    }
-    const resultMessage = document.getElementById("result-message");
-    if (resultMessage) {
-        resultMessage.remove();
+const initGameRock = (e) => {
+    e.preventDefault();
+    const user = {
+        nickname: nicknameInput.value,
+        score: score,
+    };
+    validationMsg.textContent = user.nickname.length < 1 ? "Write your nickname to start the game" : "";
+    if (user.nickname.length >= 1) {
+        startGame();
     }
 };
 
-const getNickname = (nickname) => {
-    return nickname === "" ? "Anonymous" : nickname;
+//---------------------------- OBTENCIÓN DE PREGUNTAS DE LA API ---------------------------------------//
+
+const getQuestions = async () => {
+    try {
+        const response = await axios.get("https://opentdb.com/api.php?amount=10&category=12&difficulty=easy&type=multiple");
+        quizz = response.data.results.map((challenge) => ({
+            question: decodeHTML(challenge.question),
+            correctAnswer: decodeHTML(challenge.correct_answer),
+            allAnswers: shuffle([...challenge.incorrect_answers, challenge.correct_answer]).map(decodeHTML),
+        }));
+    } catch (err) {
+        console.error("Error", err);
+    }
 };
 
+//---------------------------- LISTENERS Y LLAMADAS ---------------------------------------//
 nextButton.addEventListener("click", () => {
     currentQuestionIndex++;
     setNextQuestion();
+});
+
+startButton.addEventListener("click", () => {
+    resetGame();
+});
+
+playAgainBtn.addEventListener("click", () => {
+    resetGame();
 });
 
 questionsNav.addEventListener("click", goQuestions);
